@@ -1,11 +1,12 @@
 package service;
 
+import com.google.gson.Gson;
+
 import dao.UsuarioDAO;
 import model.Usuario;
 
 import spark.Request;
 import spark.Response;
-
 
 public class UsuarioService {
 
@@ -32,19 +33,19 @@ public class UsuarioService {
 	}
 
 	public Object get(Request request, Response response) {
-		String username = request.params(":username");
+		//System.out.println(request.body());
+		Gson gson = new Gson();
+		Usuario user = gson.fromJson(request.body(), Usuario.class);
 		
-		Usuario usuario = UsuarioDAO.getUsuario(username);
+		Usuario usuario = UsuarioDAO.getUsuario(user.getUsername(), user.getSenha());
 		
 		if (usuario != null) {
-    	    response.header("Content-Type", "application/xml");
-    	    response.header("Content-Encoding", "UTF-8");
-
-            return "<usuario>\n" + 
-            		"\t<username>" + usuario.getUsername() + "</username>\n" +
-            		"\t<email>" + usuario.getEmail() + "</email>\n" +
-            		"\t<senha>" + usuario.getSenha() + "</senha>\n" +
-            		"</usuario>\n";
+    	    //response.header("Content-Type", "application/xml");
+    	    //response.header("Content-Encoding", "UTF-8");
+    	    System.out.println("estou");
+            response.status(200);
+            //return gson.toJson(usuario);
+            return "ok";
         } else {
             response.status(404); // 404 Not found
             return "Usuário " + usuario + " não encontrado.";
@@ -52,10 +53,10 @@ public class UsuarioService {
 
 	}
 
-	public Object update(Request request, Response response) {
+	/*public Object update(Request request, Response response) {
         String username = request.params(":username");
         
-        Usuario usuario = UsuarioDAO.getUsuario(username);
+        //Usuario usuario = UsuarioDAO.getUsuario(username);
 
         if (usuario != null) {
         	usuario.setUsername(request.queryParams("username"));
@@ -70,7 +71,7 @@ public class UsuarioService {
             return "Produto não encontrado.";
         }
 
-	}
+	}*/
 
 	public Object remove(Request request, Response response) {
         String username = request.params(":username");

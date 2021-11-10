@@ -115,20 +115,18 @@ public class UsuarioDAO {
 	}
 
 	
-	public Usuario getUsuario(String username) {
-		Usuario[] usuarios = null;
-		Usuario usuario = new Usuario();
-		
+	public Usuario getUsuario(String username, String senha) {
+		Usuario usuario = null;
+		System.out.println(username + " " + senha);
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM Usuario WHERE Usuario.username LIKE " + username);		
+			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.username = '" + username + "' AND usuario.senha = '" + senha + "'");		
 	         if(rs.next()){
-	             rs.last();
-	             usuarios = new Usuario[rs.getRow()];
-	             rs.beforeFirst();
+	             //rs.last();
+	             //usuarios = new Usuario[rs.getRow()];
+	             //rs.beforeFirst();
 
-		         usuarios[0] = new Usuario(rs.getString("username"), rs.getString("email"), rs.getString("senha"));
-		         usuario = usuarios[0];
+		         usuario = new Usuario(rs.getString("username"), rs.getString("email"), rs.getString("senha"));
 	          }
 	          st.close();
 		} catch (Exception e) {

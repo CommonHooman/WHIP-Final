@@ -69,31 +69,51 @@ document.getElementById ('bttlogin').addEventListener ('click', RodaLogin);*/
 const form = document.getElementById("formLogin");
 
 function getUser() {
-    let email = document.getElementById("email").value;
+    console.log("chama");
+    let email = document.getElementById("username").value;
     let password = document.getElementById("senha").value;
-    let actionSrc = `/get/usuario/${email}`;
+    let actionSrc = `/usuario/${email}`;
+    console.log(email + " " + password);
     
-    let xhr = new XMLHttpRequest();
+    // let xhr = new XMLHttpRequest();
 
-    xhr.addEventListener( 'load', function ( event ) {
-        verifyUser(event.target.responseText, password);
-    } );
+    // xhr.addEventListener( 'load', function ( event ) {
+    //     verifyUser(event.target.responseText, password);
+    // } );
 
-    // Define case error
-    xhr.addEventListener( ' error', function ( event ) {
-        alert ( 'Oops! ' );
-    } );
+    // // Define case error
+    // xhr.addEventListener( ' error', function ( event ) {
+    //     alert ( 'Oops! ' );
+    // } );
 
-    xhr.open( "GET", actionSrc);
+    // xhr.open( "GET", actionSrc);
 
-    xhr.send();
+    // xhr.send();
+
+    $.ajax({
+        url: `http://0.0.0.0:4567/usuario/${email}`,
+        type: "POST",
+        data: JSON.stringify({ username: email, senha: password}),
+            //contentType: "application/json; charset=utf-8"
+            headers: {                "Content-Type": "application/json",
+
+            }
+        //dataType: "json"
+    }).done(function (data) {
+    	   //alert(data);
+    	   console.log("teste");
+    	   localStorage.setItem('email', email);
+           window.location.replace("/userPage.html");
+        }).fail(function(error) {
+    alert( error );
+  })
 }
 
 function verifyUser( user, password) {
     let objUser = JSON.parse(user);
     // Verificação de senha
     if(objUser.senha == password) {
-        window.location.replace("/index.html");
+        window.location.replace("/userPage.html");
         localStorage.setItem('email', JSON.stringify(objUser.email));
     } else {
         alert("Senha incorreta!");
