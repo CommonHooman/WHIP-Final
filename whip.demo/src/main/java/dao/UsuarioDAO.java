@@ -117,7 +117,6 @@ public class UsuarioDAO {
 	
 	public Usuario getUsuario(String username, String senha) {
 		Usuario usuario = null;
-		System.out.println(username + " " + senha);
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.username = '" + username + "' AND usuario.senha = '" + senha + "'");		

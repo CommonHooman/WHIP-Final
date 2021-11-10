@@ -19,7 +19,16 @@
     <link rel="stylesheet" href="assets/css/untitled.css">
 </head>
 
-<body>
+<script>
+	function gravar(){
+	            var titulo = localStorage.email;
+	            var div = document.getElementById("username");
+	             
+	            div.innerHTML = '<a class="nav-link">' + titulo +'</a>';
+	        }
+</script>
+
+<body onload="gravar()">
     <nav class="navbar navbar-dark navbar-expand-lg bg-dark navbar-custom"
         style="border-color: #212529;background: #343a40;">
         <div class="container"><a class="navbar-brand" href="index.html">WHIP</a><button data-toggle="collapse"
@@ -39,7 +48,7 @@
                             <li class="nav-item"></li>
                             <li class="nav-item"></li>
                             <li class="nav-item"></li>
-                            <li class="nav-item"><a class="nav-link">João Pinheiro</a></li>
+                            <li class="nav-item" id="username"></li>
                         </ul>
                     </div>
                 </div>

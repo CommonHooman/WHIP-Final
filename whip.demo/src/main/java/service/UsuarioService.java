@@ -42,7 +42,6 @@ public class UsuarioService {
 		if (usuario != null) {
     	    //response.header("Content-Type", "application/xml");
     	    //response.header("Content-Encoding", "UTF-8");
-    	    System.out.println("estou");
             response.status(200);
             //return gson.toJson(usuario);
             return "ok";
