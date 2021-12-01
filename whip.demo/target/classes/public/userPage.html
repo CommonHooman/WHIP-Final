@@ -21,11 +21,60 @@
 
 <script>
 	function gravar(){
-	            var titulo = localStorage.email;
-	            var div = document.getElementById("username");
-	             
-	            div.innerHTML = '<a class="nav-link">' + titulo +'</a>';
-	        }
+        var titulo = localStorage.email;
+        var div = document.getElementById("username");
+            
+        div.innerHTML = '<a class="nav-link">' + titulo +'</a>';
+        getUser();
+    }
+
+    function getUser() {
+        $.ajax({
+            url: 'http://0.0.0.0:4567/credencial/jota', //+ localStorage.getItem("email"),
+            //${localStorage.getItem("email")}
+            type: "GET",           
+            dataType: "json"
+        }).done(function (data) {
+            console.log(data);
+            var tab = document.getElementById("mainTable");
+            for(i = 0; i < data.length; i++){
+                tab.innerHTML=    
+                    '<tr>' + 
+                        '<th style="color: rgb(249,252,255);">' + data[i].site + '</th>'+
+                        '<th style="color: #ffffff;">' + data[i].username + '</th>'+
+                        '<th style="color: #ffffff;">' + data[i].valor + '</th>'+
+                    '</tr>'
+            }
+            //window.location.replace("/userPage.html");
+            }).fail(function(error) {
+        //alert( "Senha inválida" );
+        })
+    }
+
+    function getCredencial(){
+
+        let username = document.getElementById("username2").value;
+        let valor = document.getElementById("valor").value;
+        let site = document.getElementById("site").value;
+        console.log(username + " " + valor + " " + site);
+
+        $.ajax({
+            url: `http://0.0.0.0:4567/credencial`,
+            type: "POST",
+            data: JSON.stringify({ username: username, valor: valor, fk_username: localStorage.getItem("email"), site: site}),
+                headers: {                
+                    "Content-Type": "application/json",
+                }
+            //dataType: "json"
+        }).done(function (data) {
+            //alert(data);
+            console.log("teste");
+            localStorage.setItem('email', email);
+            window.location.replace("/userPage.html");
+        }).fail(function(error) {
+        //alert( "Senha inválida" );
+        })
+    }
 </script>
 
 <body onload="gravar()">
@@ -48,6 +97,13 @@
                             <li class="nav-item"></li>
                             <li class="nav-item"></li>
                             <li class="nav-item"></li>
+                            <li class="nav-item"><a class="nav-link">Categorias:</a></li>
+                            <select name="categorias" id="categorias" style="background-color: #343a40; color: aliceblue; ">
+                                <option value="Mercado">Mercado</option>
+                                <option value="Social">Rede Social</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Escolar">Escolar</option>
+                            </select>
                             <li class="nav-item" id="username"></li>
                         </ul>
                     </div>
@@ -70,52 +126,8 @@
                                     <th style="color: rgb(249,252,255);">Senha</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Instagram</td>
-                                    <td style="color: #ffffff;">joaozinho</td>
-                                    <td style="color: #ffffff;">12345</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Facebook</td>
-                                    <td style="color: #ffffff;">joaozinho</td>
-                                    <td style="color: #ffffff;">54321</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Twitter</td>
-                                    <td style="color: #ffffff;">joao_zinho</td>
-                                    <td style="color: #ffffff;">52134</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Amazon</td>
-                                    <td style="color: #ffffff;">joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">15243</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Netflix</td>
-                                    <td style="color: #ffffff;">joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">H3snfI/n</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Disney Plus</td>
-                                    <td style="color: #ffffff;">joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">G4ejue%</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">Mercado Livre</td>
-                                    <td style="color: #ffffff;">joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">HtuI192</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">OLX</td>
-                                    <td style="color: #ffffff;" >joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">Hfb17h%</td>
-                                </tr>
-                                <tr>
-                                    <td style="color: rgb(255,255,255);">PayPal</td>
-                                    <td style="color: #ffffff;">joaozinho@gmail.com</td>
-                                    <td style="color: #ffffff;">I{u%e1.9</td>
-                                </tr>
+                            <tbody id="mainTable">
+                                
                             </tbody>
                         </table>
                     </div>
@@ -123,16 +135,26 @@
             </div>
             <section class="login-clean" style="background: #343a40;">
                 <section class="login-dark" style="background: #343a40;border-color: #343a40;height: 400px;">
-                    <form method="post">
-                        <div class="form-group"><input id="bdsite" class="form-control" type="site" name="site" placeholder="SITE"/>
+                    <form class="form--register">
+                        <div class="form-group"><input id="site" class="form-control" type="site" name="site" placeholder="SITE"/>
                         </div>
-                        <div class="form-group"><input id="bduser" type="password" class="form-control" name="usuario"
+                        <div class="form-group"><input id="username2" type="text" class="form-control" name="username"
                                 placeholder="USUARIO" /></div>
-                        <div class="form-group"><input id="bdsenha" type="password" class="form-control" name="senha"
+                        <div class="form-group"><input id="valor" type="text" class="form-control" name="valor"
                                 placeholder="SENHA" /></div>
-                        <div id= "tela">...</div>
-                        <a class=" btn btn-primary btn-block" id="bdbutton" role="button">Salvar</a>
+                        <div id= "tela"></div>
+                        <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
                     </form>
+                </section>
+                <section class="login-clean" style="background: #343a40;">
+                    <section class="login-dark" style="background: #343a40;border-color: #343a40;height: 150px;">
+                        <form method="post">
+                            <div class="form-group" style="text-align:center; color:#bdc1c5 " >Teste a sua senha</div>
+                            <div class="form-group"><input id="testsenha" type="text" class="form-control" name="senha"
+                                    placeholder="SENHA" /></div>
+                            <a class=" btn btn-primary btn-block" id="btttest" role="button">Teste sua senha</a>
+                        </form>
+                    </section>
                 </section>
             </section>
         </div>
@@ -146,6 +168,7 @@
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/categorias.js"></script>
 </body>
 
 </html>

@@ -49,11 +49,11 @@ public class CredencialDAO {
 	public boolean inserirCredencial(Credencial credencial) {
 		boolean status = false;
 		try {  
+			System.out.println(credencial.getValor());
 			Statement st = conexao.createStatement();
-			st.executeUpdate("INSERT INTO Credencial (username, site, valor, dataCriacao, observacao, fk_usuario_username, fk_categoria_sigla) "
+			st.executeUpdate("INSERT INTO Credencial (username, site, valor, dataCriacao, fk_usuario_username, fk_categoria_sigla) "
 					       + "VALUES ('" + credencial.getUsername() + "', '" + credencial.getSite() + "', '"  
-					       + credencial.getValor() + "', '" + credencial.getDataCriacao() + "', '" + credencial.getObservacao()
-					       + "', " + credencial.getFkUsername() + "', " + credencial.getCategoria() + "');");
+					       + credencial.getValor() + "', '" + credencial.getDataCriacao() + "','" + credencial.getFkUsername() +"', 'pa');");
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
@@ -92,21 +92,21 @@ public class CredencialDAO {
 	}
 	
 	
-	public Credencial[] getCredenciais() {
+	public Credencial[] getCredenciais(String username) {
 		Credencial[] credenciais = null;
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM Credencial");		
+			ResultSet rs = st.executeQuery("SELECT * FROM Credencial WHERE Credencial.username = '" + username + "'");		
 	         if(rs.next()){
 	             rs.last();
 	             credenciais = new Credencial[rs.getRow()];
 	             rs.beforeFirst();
 
 	             for(int i = 0; rs.next(); i++) {
-	                credenciais[i] = new Credencial(rs.getString("username"), rs.getString("site"), rs.getString("valor"), 
-	                		                        rs.getDate("dataCriacao").toLocalDate(), rs.getString("observacao"), rs.getString("fkusername"),
-	                		                        rs.getString("categoria"));
+	                credenciais[i] = new Credencial(rs.getString("username"), rs.getString("site"), rs.getString("valor"),
+	                								rs.getString("observacao"), rs.getString("fk_usuario_username"), 
+	                								rs.getString("fk_categoria_sigla"));
 	             }
 	          }
 	          st.close();
@@ -117,21 +117,20 @@ public class CredencialDAO {
 	}
 
 	
-	public Credencial getCredencial(String site) {
+	public Credencial getCredencial(String username) {
 		Credencial[] credenciais = null;
 		Credencial credencial = new Credencial();
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM Credencial WHERE Credencial.site LIKE " + site);		
-	         if(rs.next()){
+			ResultSet rs = st.executeQuery("SELECT * FROM Credencial WHERE Credencial.username = '" + username + "'");		
+	         while(rs.next()){
 	             rs.last();
 	             credenciais = new Credencial[rs.getRow()];
 	             rs.beforeFirst();
 
 		         credenciais[0] = new Credencial(rs.getString("username"), rs.getString("site"), rs.getString("valor"), 
-	                        					 rs.getDate("dataCriacao").toLocalDate(), rs.getString("observacao"), rs.getString("fkusername"),
-	                        					 rs.getString("categoria"));
+	                        					 rs.getString("observacao"), rs.getString("fkusername"), rs.getString("categoria"));
 		         credencial = credenciais[0];
 	          }
 	          st.close();

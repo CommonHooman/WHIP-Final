@@ -51,8 +51,8 @@ public class UsuarioDAO {
 		try {  
 			Statement st = conexao.createStatement();
 			st.executeUpdate("INSERT INTO usuario (username, email, senha) "
-					       + "VALUES ('" + user.getUsername()+ "', '" + user.getEmail() + "', '"  
-					       + user.getSenha() +"');");
+					       + "VALUES ('" + user.getUsername()+ "', '" + user.getEmail() + "', "  
+					       + "crypt('" + user.getSenha() +  "', gen_salt('bf')));");
 			
 			
 			st.close();
@@ -119,12 +119,9 @@ public class UsuarioDAO {
 		Usuario usuario = null;
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.username = '" + username + "' AND usuario.senha = '" + senha + "'");		
+			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.username = '" + username + 
+					"' AND usuario.senha = crypt('" + senha + "', senha)");
 	         if(rs.next()){
-	             //rs.last();
-	             //usuarios = new Usuario[rs.getRow()];
-	             //rs.beforeFirst();
-
 		         usuario = new Usuario(rs.getString("username"), rs.getString("email"), rs.getString("senha"));
 	          }
 	          st.close();

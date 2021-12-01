@@ -1,6 +1,6 @@
 package service;
 
-import java.time.LocalDate;
+import com.google.gson.Gson;
 
 import dao.CredencialDAO;
 import model.Credencial;
@@ -9,11 +9,11 @@ import spark.Request;
 import spark.Response;
 
 
-public class credencialService {
+public class CredencialService {
 
 	private CredencialDAO CredencialDAO;
 
-	public credencialService() {
+	public CredencialService() {
 		CredencialDAO = new CredencialDAO();
 		CredencialDAO.conectar();
 	} 
@@ -23,14 +23,15 @@ public class credencialService {
 		String username = request.queryParams("username");
 		String site = request.queryParams("site");
 		String valor = request.queryParams("valor");
-		LocalDate dataCriacao = LocalDate.parse(request.queryParams("dataCriacao"));
 		String observacao = request.queryParams("observacao");
 		String fk_username = request.queryParams("fkusername");
 		String categoria = request.queryParams("categoria");
 
-		Credencial credencial = new Credencial(username, site, valor, dataCriacao, observacao, fk_username, categoria);
+		Credencial credencial = new Credencial(username, site, valor, observacao, fk_username, categoria);
+		//System.out.println(credencial.getSite() + " " + credencial.getValor());
 
 		CredencialDAO.inserirCredencial(credencial);
+		response.redirect("userPage.html");
 
 		response.status(201); // 201 Created
 		return username;
@@ -39,9 +40,10 @@ public class credencialService {
 	public Object get(Request request, Response response) {
 		String username = request.params(":username");
 		
-		Credencial credencial = CredencialDAO.getCredencial(username);
+		Credencial[] credencial = CredencialDAO.getCredenciais(username);
+		Gson gson = new Gson();
 		
-		if (credencial != null) {
+		/*if (credencial != null) {
     	    response.header("Content-Type", "application/xml");
     	    response.header("Content-Encoding", "UTF-8");
 
@@ -57,7 +59,11 @@ public class credencialService {
         } else {
             response.status(404); // 404 Not found
             return "Credencial " + credencial + " não encontrado.";
-        }
+        }*/
+		if  (credencial != null) {
+		    response.status(200);
+		} else response.status(400);
+		 return gson.toJson(credencial);
 
 	}
 
@@ -70,7 +76,6 @@ public class credencialService {
         	credencial.setUsername(request.queryParams("username"));
         	credencial.setSite(request.queryParams("site"));
         	credencial.setValor(request.queryParams("valor"));
-        	credencial.setDataCriacao(LocalDate.parse(request.queryParams("dataCriacao")));
         	credencial.setObservacao(request.queryParams("observacao"));
         	credencial.setFkUsername(request.queryParams("fkusername"));
         	credencial.setCategoria(request.queryParams("categoria"));
@@ -94,7 +99,7 @@ public class credencialService {
         	return username;
 	}
 
-	public Object getAll(Request request, Response response) {
+	/*public Object getAll(Request request, Response response) {
 		StringBuffer returnValue = new StringBuffer("<credenciais type=\"array\">");
 		for (Credencial credencial : CredencialDAO.getCredenciais()) {
 			returnValue.append("\n<credencial>\n" + 
@@ -111,5 +116,5 @@ public class credencialService {
 	    response.header("Content-Type", "application/xml");
 	    response.header("Content-Encoding", "UTF-8");
 		return returnValue.toString();
-	}
+	}*/
 }

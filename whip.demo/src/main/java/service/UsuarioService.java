@@ -28,6 +28,7 @@ public class UsuarioService {
 		
 		UsuarioDAO.inserirUsuario(usuario);
 
+		response.redirect("login.html");
 		response.status(201); // 201 Created
 		return username;
 	}
@@ -40,16 +41,12 @@ public class UsuarioService {
 		Usuario usuario = UsuarioDAO.getUsuario(user.getUsername(), user.getSenha());
 		
 		if (usuario != null) {
-    	    //response.header("Content-Type", "application/xml");
-    	    //response.header("Content-Encoding", "UTF-8");
             response.status(200);
-            //return gson.toJson(usuario);
             return "ok";
         } else {
-            response.status(404); // 404 Not found
+            response.status(404);
             return "Usuário " + usuario + " não encontrado.";
         }
-
 	}
 
 	/*public Object update(Request request, Response response) {

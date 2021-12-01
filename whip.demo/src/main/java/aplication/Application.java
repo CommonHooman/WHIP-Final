@@ -1,11 +1,14 @@
 package aplication;
 
 import static spark.Spark.*;
+
+import service.CredencialService;
 import service.UsuarioService;
 
-public class UsuarioAplication{
+public class Application{
 	
 	private static UsuarioService usuarioService = new UsuarioService();
+	private static CredencialService credencialService = new CredencialService();
 	
 	public static void main(String[] args) throws Exception{
 		
@@ -14,11 +17,9 @@ public class UsuarioAplication{
 		post("/usuario", (request, response) -> usuarioService.add(request, response));
 		
 		post("/usuario/:username",  "application/json", (request, response) -> usuarioService.get(request, response));
-
-		//get("/usuario/update/:username", (request, response) -> usuarioService.update(request, response));
 		
-		get("/usuario/remove/:username", (request, response) -> usuarioService.remove(request, response));
-
-		get("/usuario", (request, response) -> usuarioService.getAll(request, response));
+		post("/credencial", (request, response) -> credencialService.add(request, response));
+		
+		get("/credencial/:username",  "application/json", (request, response) -> credencialService.get(request, response));
 	}
 }

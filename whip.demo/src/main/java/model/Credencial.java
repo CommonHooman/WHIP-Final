@@ -1,6 +1,6 @@
 package model;
 
-import java.time.*;
+import java.sql.*;
 
 public class Credencial {
 	/*
@@ -9,7 +9,7 @@ public class Credencial {
 	private String username;
 	private String site;
 	private String valor;
-	private LocalDate dataCriacao;
+	private Date   dataCriacao;
 	private String observacao;
 	private String fk_usuario_username;
 	private String fk_categoria_sigla;
@@ -23,11 +23,13 @@ public class Credencial {
 		fk_categoria_sigla = null;
 	}
 	
-	public Credencial(String username, String site, String valor, LocalDate dataCriacao, String observacao, String fk_usuario_username, String fk_categoria_sigla) {
+	public Credencial(String username, String site, String valor, String observacao, String fk_usuario_username, String fk_categoria_sigla) {
+		long millis =  System.currentTimeMillis();
+		java.sql.Date date = new java.sql.Date(millis);
 		this.username = username;
 		this.site = site;
 		this.valor = valor;
-		this.dataCriacao = dataCriacao;
+		this.dataCriacao = date;
 		this.observacao = observacao;
 		this.fk_usuario_username = fk_usuario_username;
 		this.fk_categoria_sigla = fk_categoria_sigla;
@@ -51,11 +53,13 @@ public class Credencial {
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
-	public LocalDate getDataCriacao() {
+	public Date getDataCriacao() {
 		return dataCriacao;
 	}
-	public void setDataCriacao(LocalDate dataCriacao) {
-		this.dataCriacao = dataCriacao;
+	public void setDataCriacao() {
+		long millis =  System.currentTimeMillis();
+		java.sql.Date date = new java.sql.Date(millis);
+		this.dataCriacao = date;
 	}
 	public String getObservacao() {
 		return observacao;
