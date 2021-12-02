@@ -19,64 +19,6 @@
     <link rel="stylesheet" href="assets/css/untitled.css">
 </head>
 
-<script>
-	function gravar(){
-        var titulo = localStorage.email;
-        var div = document.getElementById("username");
-            
-        div.innerHTML = '<a class="nav-link">' + titulo +'</a>';
-        getUser();
-    }
-
-    function getUser() {
-        $.ajax({
-            url: 'http://0.0.0.0:4567/credencial/jota', //+ localStorage.getItem("email"),
-            //${localStorage.getItem("email")}
-            type: "GET",           
-            dataType: "json"
-        }).done(function (data) {
-            console.log(data);
-            var tab = document.getElementById("mainTable");
-            for(i = 0; i < data.length; i++){
-                tab.innerHTML=    
-                    '<tr>' + 
-                        '<th style="color: rgb(249,252,255);">' + data[i].site + '</th>'+
-                        '<th style="color: #ffffff;">' + data[i].username + '</th>'+
-                        '<th style="color: #ffffff;">' + data[i].valor + '</th>'+
-                    '</tr>'
-            }
-            //window.location.replace("/userPage.html");
-            }).fail(function(error) {
-        //alert( "Senha inválida" );
-        })
-    }
-
-    function getCredencial(){
-
-        let username = document.getElementById("username2").value;
-        let valor = document.getElementById("valor").value;
-        let site = document.getElementById("site").value;
-        console.log(username + " " + valor + " " + site);
-
-        $.ajax({
-            url: `http://0.0.0.0:4567/credencial`,
-            type: "POST",
-            data: JSON.stringify({ username: username, valor: valor, fk_username: localStorage.getItem("email"), site: site}),
-                headers: {                
-                    "Content-Type": "application/json",
-                }
-            //dataType: "json"
-        }).done(function (data) {
-            //alert(data);
-            console.log("teste");
-            localStorage.setItem('email', email);
-            window.location.replace("/userPage.html");
-        }).fail(function(error) {
-        //alert( "Senha inválida" );
-        })
-    }
-</script>
-
 <body onload="gravar()">
     <nav class="navbar navbar-dark navbar-expand-lg bg-dark navbar-custom"
         style="border-color: #212529;background: #343a40;">
@@ -144,14 +86,14 @@
                                 placeholder="SENHA" /></div>
                         <div id= "tela"></div>
                         <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
+                        <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getUser()">Ver senhas</button></div>
                     </form>
                 </section>
                 <section class="login-clean" style="background: #343a40;">
                     <section class="login-dark" style="background: #343a40;border-color: #343a40;height: 150px;">
                         <form method="post">
                             <div class="form-group" style="text-align:center; color:#bdc1c5 " >Teste a sua senha</div>
-                            <div class="form-group"><input id="testsenha" type="text" class="form-control" name="senha"
-                                    placeholder="SENHA" /></div>
+                            <div class="form-group"><input id="testsenha" type="text" class="form-control" name="senha" placeholder="SENHA" /></div>
                             <a class=" btn btn-primary btn-block" id="btttest" role="button">Teste sua senha</a>
                         </form>
                     </section>
@@ -167,8 +109,7 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/categorias.js"></script>
+    <script src="assets/js/userPage.js"></script>
 </body>
 
 </html>

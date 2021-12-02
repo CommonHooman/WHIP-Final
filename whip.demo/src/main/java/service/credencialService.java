@@ -19,7 +19,6 @@ public class CredencialService {
 	} 
 
 	public Object add(Request request, Response response) {
-		//Credencial[] credenciais = CredencialDAO.getCredenciais(); //é necessário ter essa linha?
 		String username = request.queryParams("username");
 		String site = request.queryParams("site");
 		String valor = request.queryParams("valor");
@@ -28,10 +27,10 @@ public class CredencialService {
 		String categoria = request.queryParams("categoria");
 
 		Credencial credencial = new Credencial(username, site, valor, observacao, fk_username, categoria);
-		//System.out.println(credencial.getSite() + " " + credencial.getValor());
+		System.out.println(credencial.toString());
 
 		CredencialDAO.inserirCredencial(credencial);
-		response.redirect("userPage.html");
+		//response.redirect("userPage.html");
 
 		response.status(201); // 201 Created
 		return username;

@@ -49,7 +49,6 @@ public class CredencialDAO {
 	public boolean inserirCredencial(Credencial credencial) {
 		boolean status = false;
 		try {  
-			System.out.println(credencial.getValor());
 			Statement st = conexao.createStatement();
 			st.executeUpdate("INSERT INTO Credencial (username, site, valor, dataCriacao, fk_usuario_username, fk_categoria_sigla) "
 					       + "VALUES ('" + credencial.getUsername() + "', '" + credencial.getSite() + "', '"  
