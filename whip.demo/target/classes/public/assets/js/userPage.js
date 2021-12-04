@@ -10,21 +10,23 @@ function getUser() {
         url: 'http://0.0.0.0:4567/credencial/' + localStorage.getItem("email"),
         //${localStorage.getItem("email")}
         type: "GET",           
-        dataType: "json"
+        dataType: "json",
+        headers: {
+            "Content-Type": "application/json",
+        }
     }).done(function (data) {
-        console.log(data);
         var tab = document.getElementById("mainTable");
         for(i = 0; i < data.length; i++){
-            tab.innerHTML=    
-                '<tr>' + 
-                    '<th style="color: rgb(249,252,255);">' + data[i].site + '</th>'+
-                    '<th style="color: #ffffff;">' + data[i].username + '</th>'+
-                    '<th style="color: #ffffff;">' + data[i].valor + '</th>'+
-                '</tr>'
+            tab.innerHTML+=
+                `<tr> 
+                    <th style="color: rgb(249,252,255);"> ${data[i].site} </th>
+                    <th style="color: #ffffff;"> ${data[i].username} </th>
+                    <th style="color: #ffffff;"> ${data[i].valor} </th>
+                </tr>`
         }
         //window.location.replace("/userPage.html");
         }).fail(function(error) {
-    //alert( "Senha inválida" );
+        alert( error );
     })
 }
 
@@ -33,17 +35,12 @@ function getCredencial(){
     let valor = document.getElementById("valor").value;
     let site = document.getElementById("site").value;
     var data = { username: username, valor: valor, fk_username: localStorage.getItem("email"), site: site};
-    console.log(username + " " + valor + " " + site);
-    //debugger;
 
     $.ajax({
         url: `http://0.0.0.0:4567/credencial`,
         type: "POST",
         //data: JSON.stringify(data),
-        data: data,
-            headers: {                
-                "Content-Type": "application/json",
-            }
+        data: data
         //dataType: "json"
     }).done(function (data) {
         //alert(data);
@@ -51,6 +48,10 @@ function getCredencial(){
         localStorage.setItem('email', email);
         window.location.replace("/userPage.html");
     }).fail(function(error) {
-    //alert( "Senha inválida" );
+    alert( "Senha inválida" );
     })
+}
+
+function clearStorage(){
+    localStorage.clear();
 }

@@ -49,10 +49,14 @@ public class CredencialDAO {
 	public boolean inserirCredencial(Credencial credencial) {
 		boolean status = false;
 		try {  
-			Statement st = conexao.createStatement();
-			st.executeUpdate("INSERT INTO Credencial (username, site, valor, dataCriacao, fk_usuario_username, fk_categoria_sigla) "
-					       + "VALUES ('" + credencial.getUsername() + "', '" + credencial.getSite() + "', '"  
-					       + credencial.getValor() + "', '" + credencial.getDataCriacao() + "','" + credencial.getFkUsername() +"', 'pa');");
+			PreparedStatement st = conexao.prepareStatement("INSERT INTO credencial (username, site, valor, dataCriacao, fk_usuario_username, fk_categoria_sigla) VALUES (?,?,?,?,?,?)");
+			st.setString(1, credencial.getUsername());
+			st.setString(2, credencial.getSite());
+			st.setString(3, credencial.getValor());
+			st.setDate(4, credencial.getDataCriacao());
+			st.setString(5, credencial.getFkUsername()); 
+			st.setString(6, "pa"); 
+			st.executeUpdate();
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
@@ -60,43 +64,13 @@ public class CredencialDAO {
 		}
 		return status;
 	}
-	
-	public boolean atualizarCredencial(Credencial credencial) {
-		boolean status = false;
-		try {  
-			Statement st = conexao.createStatement();
-			String sql = "UPDATE Credencial SET username = '" + credencial.getUsername() + "', site = '" + credencial.getSite() 
-					   + "', valor = '" + credencial.getValor() + "', dataCriacao = '" + credencial.getDataCriacao() + "', observacao ='" 
-					   + credencial.getObservacao() + "', username = '" + credencial.getFkUsername() + "', categoria = '" + credencial.getCategoria();
-			st.executeUpdate(sql);
-			st.close();
-			status = true;
-		} catch (SQLException u) {  
-			throw new RuntimeException(u);
-		}
-		return status;
-	}
-	
-	public boolean excluirCredencial(String site) {
-		boolean status = false;
-		try {  
-			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM Credencial WHERE site = " + site);
-			st.close();
-			status = true;
-		} catch (SQLException u) {  
-			throw new RuntimeException(u);
-		}
-		return status;
-	}
-	
 	
 	public Credencial[] getCredenciais(String username) {
 		Credencial[] credenciais = null;
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM Credencial WHERE Credencial.username = '" + username + "'");		
+			ResultSet rs = st.executeQuery("SELECT * FROM Credencial WHERE Credencial.fk_usuario_username = '" + username + "'");		
 	         if(rs.next()){
 	             rs.last();
 	             credenciais = new Credencial[rs.getRow()];

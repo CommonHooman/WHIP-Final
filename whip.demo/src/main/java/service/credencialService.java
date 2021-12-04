@@ -23,7 +23,7 @@ public class CredencialService {
 		String site = request.queryParams("site");
 		String valor = request.queryParams("valor");
 		String observacao = request.queryParams("observacao");
-		String fk_username = request.queryParams("fkusername");
+		String fk_username = request.queryParams("fk_username");
 		String categoria = request.queryParams("categoria");
 
 		Credencial credencial = new Credencial(username, site, valor, observacao, fk_username, categoria);
@@ -42,78 +42,12 @@ public class CredencialService {
 		Credencial[] credencial = CredencialDAO.getCredenciais(username);
 		Gson gson = new Gson();
 		
-		/*if (credencial != null) {
-    	    response.header("Content-Type", "application/xml");
-    	    response.header("Content-Encoding", "UTF-8");
-
-            return "<credencial>\n" + 
-            		"\t<username>" + credencial.getUsername() + "</username>\n" +
-            		"\t<site>" + credencial.getSite() + "</site>\n" +
-            		"\t<valor>" + credencial.getValor() + "</valor>\n" +
-                    "\t<dataCriacao>" + credencial.getDataCriacao() + "</dataCriacao>\n" +
-                    "\t<observacao>" + credencial.getObservacao() + "</observacao>\n" +
-                    "\t<fkusername>" + credencial.getFkUsername() + "</fkusername>\n" +
-                    "\t<categoria>" + credencial.getCategoria() + "</categoria>\n" +
-            		"</credencial>\n";
-        } else {
-            response.status(404); // 404 Not found
-            return "Credencial " + credencial + " não encontrado.";
-        }*/
+		System.out.println(credencial[0].toString());
 		if  (credencial != null) {
 		    response.status(200);
+		    response.header("Content-Type", "application/json");
 		} else response.status(400);
 		 return gson.toJson(credencial);
 
 	}
-
-	public Object update(Request request, Response response) {
-        String site = request.params(":site");
-        
-        Credencial credencial = CredencialDAO.getCredencial(site);
-
-        if (credencial != null) {
-        	credencial.setUsername(request.queryParams("username"));
-        	credencial.setSite(request.queryParams("site"));
-        	credencial.setValor(request.queryParams("valor"));
-        	credencial.setObservacao(request.queryParams("observacao"));
-        	credencial.setFkUsername(request.queryParams("fkusername"));
-        	credencial.setCategoria(request.queryParams("categoria"));
-
-        	CredencialDAO.atualizarCredencial(credencial);
-        	
-            return credencial;
-        } else {
-            response.status(404); // 404 Not found
-            return "Produto não encontrado.";
-        }
-
-	}
-
-	public Object remove(Request request, Response response) {
-        String username = request.params(":username");
-
-            CredencialDAO.excluirCredencial(username);
-
-            response.status(200); // success
-        	return username;
-	}
-
-	/*public Object getAll(Request request, Response response) {
-		StringBuffer returnValue = new StringBuffer("<credenciais type=\"array\">");
-		for (Credencial credencial : CredencialDAO.getCredenciais()) {
-			returnValue.append("\n<credencial>\n" + 
-            		"\t<username>" + credencial.getUsername() + "</username>\n" +
-            		"\t<site>" + credencial.getSite() + "</site>\n" +
-            		"\t<valor>" + credencial.getValor() + "</valor>\n" +
-                    "\t<dataCriacao>" + credencial.getDataCriacao() + "</dataCriacao>\n" +
-                    "\t<observacao>" + credencial.getObservacao() + "</observacao>\n" +
-                    "\t<fkusername>" + credencial.getFkUsername() + "</fkusername>\n" +
-                    "\t<categoria>" + credencial.getCategoria() + "</categoria>\n" +
-            		"</credencial>\n");
-		}
-		returnValue.append("</credenciais>");
-	    response.header("Content-Type", "application/xml");
-	    response.header("Content-Encoding", "UTF-8");
-		return returnValue.toString();
-	}*/
 }

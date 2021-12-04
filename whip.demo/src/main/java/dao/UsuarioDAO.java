@@ -49,78 +49,30 @@ public class UsuarioDAO {
 	public boolean inserirUsuario(Usuario user) {
 		boolean status = false;
 		try {  
-			Statement st = conexao.createStatement();
-			st.executeUpdate("INSERT INTO usuario (username, email, senha) "
-					       + "VALUES ('" + user.getUsername()+ "', '" + user.getEmail() + "', "  
-					       + "crypt('" + user.getSenha() +  "', gen_salt('bf')));");
-			
-			
+			PreparedStatement st = conexao.prepareStatement("INSERT INTO usuario (username, email, senha) VALUES (?,?,?)");
+			st.setString(1, user.getUsername());
+			st.setString(2, user.getEmail());
+			st.setString(3, user.getSenha());
+			st.executeUpdate();
 			st.close();
-			status = true;
-		} catch (SQLException u) {  
-			throw new RuntimeException(u);
-		}
-		return status;
-	}
-	
-	public boolean atualizarUsuario(Usuario user) {
-		boolean status = false;
-		try {  
-			Statement st = conexao.createStatement();
-			String sql = "UPDATE Usuario SET username = '" + user.getUsername() + "', email = '" + user.getEmail() 
-					   + "', senha = '" + user.getSenha();
-			st.executeUpdate(sql);
-			st.close();
-			status = true;
-		} catch (SQLException u) {  
-			throw new RuntimeException(u);
-		}
-		return status;
-	}
-	
-	public boolean excluirUsuario(String username) {
-		boolean status = false;
-		try {  
-			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM Usuario WHERE username = " + username);
-			st.close();
-			status = true;
-		} catch (SQLException u) {  
-			throw new RuntimeException(u);
-		}
-		return status;
-	}
-	
-	
-	public Usuario[] getUsuarios() {
-		Usuario[] usuarios = null;
-		
-		try {
-			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM Usuario");		
-	         if(rs.next()){
-	             rs.last();
-	             usuarios = new Usuario[rs.getRow()];
-	             rs.beforeFirst();
 
-	             for(int i = 0; rs.next(); i++) {
-	                usuarios[i] = new Usuario(rs.getString("username"), rs.getString("email"), rs.getString("senha"));
-	             }
-	          }
-	          st.close();
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			status = true;
+		} catch (SQLException u) {  
+			throw new RuntimeException(u);
 		}
-		return usuarios;
+		return status;
 	}
 
 	
 	public Usuario getUsuario(String username, String senha) {
 		Usuario usuario = null;
 		try {
-			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.username = '" + username + 
-					"' AND usuario.senha = crypt('" + senha + "', senha)");
+			PreparedStatement st = conexao.prepareStatement("SELECT * FROM usuario WHERE usuario.username = ? AND usuario.senha = ?");
+
+			st.setString(1, username);
+			st.setString(2, senha);
+			ResultSet rs = st.executeQuery();
+			
 	         if(rs.next()){
 		         usuario = new Usuario(rs.getString("username"), rs.getString("email"), rs.getString("senha"));
 	          }

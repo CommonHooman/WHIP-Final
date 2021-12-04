@@ -22,7 +22,7 @@
 <body onload="gravar()">
     <nav class="navbar navbar-dark navbar-expand-lg bg-dark navbar-custom"
         style="border-color: #212529;background: #343a40;">
-        <div class="container"><a class="navbar-brand" href="index.html">WHIP</a><button data-toggle="collapse"
+        <div class="container"><a class="navbar-brand" onclick="clearStorage()" href="index.html">WHIP</a><button data-toggle="collapse"
                 class="navbar-toggler" data-target="#navbarResponsive-1"><span
                     class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarResponsive-1">
@@ -85,8 +85,8 @@
                         <div class="form-group"><input id="valor" type="text" class="form-control" name="valor"
                                 placeholder="SENHA" /></div>
                         <div id= "tela"></div>
-                        <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
-                        <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getUser()">Ver senhas</button></div>
+                        <div class="form-group"><button class=" btn btn-primary btn-block" type="button" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
+                        <div class="form-group"><button class=" btn btn-primary btn-block" type="button" value="Register" id="bdbutton" onclick="getUser()">Ver senhas</button></div>
                     </form>
                 </section>
                 <section class="login-clean" style="background: #343a40;">

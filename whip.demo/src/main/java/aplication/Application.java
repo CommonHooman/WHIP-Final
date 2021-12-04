@@ -20,6 +20,6 @@ public class Application{
 		
 		post("/credencial", (request, response) -> credencialService.add(request, response));
 		
-		get("/credencial/:username",  "application/json", (request, response) -> credencialService.get(request, response));
+		get("/credencial/:username", (request, response) -> credencialService.get(request, response));
 	}
 }

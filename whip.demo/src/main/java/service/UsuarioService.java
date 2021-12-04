@@ -1,5 +1,9 @@
 package service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import com.google.gson.Gson;
 
 import dao.UsuarioDAO;
@@ -17,14 +21,12 @@ public class UsuarioService {
 		UsuarioDAO.conectar();
 	} 
 
-	public Object add(Request request, Response response) {
-		//Usuario[] usuarios = UsuarioDAO.getUsuarios();
+	public Object add(Request request, Response response) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		String username = request.queryParams("username");
 		String email = request.queryParams("email");
 		String senha = request.queryParams("senha");
 
-		Usuario usuario = new Usuario(username, senha, email);
-		//System.out.println(usuario.getUsername() + " " + usuario.getEmail() + " " + usuario.getSenha());
+		Usuario usuario = new Usuario(username, crypt(senha), email);
 		
 		UsuarioDAO.inserirUsuario(usuario);
 
@@ -33,12 +35,11 @@ public class UsuarioService {
 		return username;
 	}
 
-	public Object get(Request request, Response response) {
-		//System.out.println(request.body());
+	public Object get(Request request, Response response) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		Gson gson = new Gson();
-		Usuario user = gson.fromJson(request.body(), Usuario.class);
+		Usuario user = gson.fromJson(request.body(), Usuario.class);          
 		
-		Usuario usuario = UsuarioDAO.getUsuario(user.getUsername(), user.getSenha());
+		Usuario usuario = UsuarioDAO.getUsuario(user.getUsername(), crypt(user.getSenha()));
 		
 		if (usuario != null) {
             response.status(200);
@@ -49,47 +50,11 @@ public class UsuarioService {
         }
 	}
 
-	/*public Object update(Request request, Response response) {
-        String username = request.params(":username");
-        
-        //Usuario usuario = UsuarioDAO.getUsuario(username);
-
-        if (usuario != null) {
-        	usuario.setUsername(request.queryParams("username"));
-        	usuario.setEmail(request.queryParams("email"));
-        	usuario.setSenha(request.queryParams("senha"));
-
-        	UsuarioDAO.atualizarUsuario(usuario);
-        	
-            return username;
-        } else {
-            response.status(404); // 404 Not found
-            return "Produto não encontrado.";
-        }
-
-	}*/
-
-	public Object remove(Request request, Response response) {
-        String username = request.params(":username");
-
-            UsuarioDAO.excluirUsuario(username);
-
-            response.status(200); // success
-        	return username;
-	}
-
-	public Object getAll(Request request, Response response) {
-		StringBuffer returnValue = new StringBuffer("<usuarios type=\"array\">");
-		for (Usuario usuario : UsuarioDAO.getUsuarios()) {
-			returnValue.append("\n<usuario>\n" + 
-            		"\t<username>" + usuario.getUsername() + "</username>\n" +
-            		"\t<email>" + usuario.getEmail() + "</email>\n" +
-            		"\t<senha>" + usuario.getSenha() + "</senha>\n" +
-            		"</usuario>\n");
-		}
-		returnValue.append("</usuarios>");
-	    response.header("Content-Type", "application/xml");
-	    response.header("Content-Encoding", "UTF-8");
-		return returnValue.toString();
+	public String crypt(String senha) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest md5 = MessageDigest.getInstance("MD5");
+		byte messageDigest[] = md5.digest(senha.getBytes("UTF-8"));
+		
+		String criptografada = new String(messageDigest, "UTF-8");
+		return criptografada;
 	}
 }
