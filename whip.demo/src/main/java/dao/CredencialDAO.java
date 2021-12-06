@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.*;
+import java.util.Base64;
+
 import model.Credencial;
 
 public class CredencialDAO {
@@ -55,7 +57,7 @@ public class CredencialDAO {
 			st.setString(3, credencial.getValor());
 			st.setDate(4, credencial.getDataCriacao());
 			st.setString(5, credencial.getFkUsername()); 
-			st.setString(6, "pa"); 
+			st.setString(6, "padrão"); 
 			st.executeUpdate();
 			st.close();
 			status = true;
@@ -77,7 +79,7 @@ public class CredencialDAO {
 	             rs.beforeFirst();
 
 	             for(int i = 0; rs.next(); i++) {
-	                credenciais[i] = new Credencial(rs.getString("username"), rs.getString("site"), rs.getString("valor"),
+	                credenciais[i] = new Credencial(rs.getString("username"), rs.getString("site"), decrypt(rs.getString("valor")),
 	                								rs.getString("observacao"), rs.getString("fk_usuario_username"), 
 	                								rs.getString("fk_categoria_sigla"));
 	             }
@@ -102,7 +104,7 @@ public class CredencialDAO {
 	             credenciais = new Credencial[rs.getRow()];
 	             rs.beforeFirst();
 
-		         credenciais[0] = new Credencial(rs.getString("username"), rs.getString("site"), rs.getString("valor"), 
+		         credenciais[0] = new Credencial(rs.getString("username"), rs.getString("site"), decrypt(rs.getString("valor")), 
 	                        					 rs.getString("observacao"), rs.getString("fkusername"), rs.getString("categoria"));
 		         credencial = credenciais[0];
 	          }
@@ -111,5 +113,9 @@ public class CredencialDAO {
 			System.err.println(e.getMessage());
 		}
 		return credencial;
+	}
+	
+	public static String decrypt(String pValor) {
+	    return new String(Base64.getDecoder().decode(pValor.getBytes()));
 	}
 }

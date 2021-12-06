@@ -54,7 +54,7 @@ public class UsuarioService {
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
 		byte messageDigest[] = md5.digest(senha.getBytes("UTF-8"));
 		
-		String criptografada = new String(messageDigest, "UTF-8");
-		return criptografada;
+		String crypted = new String(messageDigest, "UTF-8");
+		return crypted;
 	}
 }

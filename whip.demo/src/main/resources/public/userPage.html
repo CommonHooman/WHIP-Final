@@ -41,7 +41,7 @@
                             <li class="nav-item"></li>
                             <li class="nav-item"><a class="nav-link">Categorias:</a></li>
                             <select name="categorias" id="categorias" style="background-color: #343a40; color: aliceblue; ">
-                                <option value="Mercado">Mercado</option>
+                                <option value="Padrão">Padrão</option>
                                 <option value="Social">Rede Social</option>
                                 <option value="Financeiro">Financeiro</option>
                                 <option value="Escolar">Escolar</option>
@@ -66,6 +66,7 @@
                                     <th style="color: rgb(249,252,255);">Sites</th>
                                     <th style="color: rgb(249,252,255);">Usuário</th>
                                     <th style="color: rgb(249,252,255);">Senha</th>
+                                    <th style="color: rgb(249,252,255);">Categoria</th>
                                 </tr>
                             </thead>
                             <tbody id="mainTable">
@@ -85,7 +86,7 @@
                         <div class="form-group"><input id="valor" type="text" class="form-control" name="valor"
                                 placeholder="SENHA" /></div>
                         <div id= "tela"></div>
-                        <div class="form-group"><button class=" btn btn-primary btn-block" type="button" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
+                        <div class="form-group"><button class=" btn btn-primary btn-block" type="submit" value="Register" id="bdbutton" onclick="getCredencial(this)">Salvar</button></div>
                         <div class="form-group"><button class=" btn btn-primary btn-block" type="button" value="Register" id="bdbutton" onclick="getUser()">Ver senhas</button></div>
                     </form>
                 </section>

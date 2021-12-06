@@ -1,6 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
+import java.util.*;
 
 import dao.CredencialDAO;
 import model.Credencial;
@@ -26,8 +27,7 @@ public class CredencialService {
 		String fk_username = request.queryParams("fk_username");
 		String categoria = request.queryParams("categoria");
 
-		Credencial credencial = new Credencial(username, site, valor, observacao, fk_username, categoria);
-		System.out.println(credencial.toString());
+		Credencial credencial = new Credencial(username, site, crypt(valor), observacao, fk_username, categoria);
 
 		CredencialDAO.inserirCredencial(credencial);
 		//response.redirect("userPage.html");
@@ -42,12 +42,14 @@ public class CredencialService {
 		Credencial[] credencial = CredencialDAO.getCredenciais(username);
 		Gson gson = new Gson();
 		
-		System.out.println(credencial[0].toString());
 		if  (credencial != null) {
 		    response.status(200);
 		    response.header("Content-Type", "application/json");
 		} else response.status(400);
 		 return gson.toJson(credencial);
-
+	}
+	
+	public static String crypt(String pValor) {
+	    return new String(Base64.getEncoder().encode(pValor.getBytes()));
 	}
 }

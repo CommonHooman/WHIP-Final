@@ -22,11 +22,12 @@ function getUser() {
                     <th style="color: rgb(249,252,255);"> ${data[i].site} </th>
                     <th style="color: #ffffff;"> ${data[i].username} </th>
                     <th style="color: #ffffff;"> ${data[i].valor} </th>
+                    <th style="color: #ffffff;"> ${data[i].fk_categoria_sigla} </th>
                 </tr>`
         }
         //window.location.replace("/userPage.html");
         }).fail(function(error) {
-        alert( error );
+        alert( 'O usuário ' + localStorage.getItem("email") + ' não possui nenhuma senha cadastrada.' );
     })
 }
 
